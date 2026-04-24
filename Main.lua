@@ -46,7 +46,23 @@ function funcs:getasstring(val, check, lol)
 	elseif t == "table" then
 		local str = "{"
 		local n = false
+		local compare = 0
+		for i,v in pairs(val) do
+			compare += 1
+		end
 		for i, v in pairs(val) do
+			if i == compare then
+				if typeof(i) == "number" then 
+				n = true
+				str = str .. "".. self:getasstring(v, true) .. ""
+			else
+				local hmm = "    "
+				for i = 1, lol do
+					hmm = hmm.."    "
+				end
+				str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ""
+			end
+			end
 			if typeof(i) == "number" then 
 				n = true
 				str = str .. "".. self:getasstring(v, true) .. ","
