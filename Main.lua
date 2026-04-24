@@ -47,10 +47,12 @@ function funcs:getasstring(val, check, lol)
 		local str = "{"
 		local n = false
 		local compare = 0
+		local cur = 0
 		for i,v in pairs(val) do
 			compare += 1
 		end
 		for i, v in pairs(val) do
+			cur += 1
 			if i == compare then
 				if typeof(i) == "number" then 
 					n = true
