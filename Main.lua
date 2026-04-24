@@ -53,7 +53,7 @@ function funcs:getasstring(val, check, lol)
 		end
 		for i, v in pairs(val) do
 			cur += 1
-			if i == compare then
+			if cur == compare then
 				if typeof(i) == "number" then 
 					n = true
 					str = str .. "".. self:getasstring(v, true) .. ""
