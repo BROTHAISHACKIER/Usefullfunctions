@@ -53,26 +53,27 @@ function funcs:getasstring(val, check, lol)
 		for i, v in pairs(val) do
 			if i == compare then
 				if typeof(i) == "number" then 
-				n = true
-				str = str .. "".. self:getasstring(v, true) .. ""
-			else
-				local hmm = "    "
-				for i = 1, lol do
-					hmm = hmm.."    "
+					n = true
+					str = str .. "".. self:getasstring(v, true) .. ""
+				else
+					local hmm = "    "
+					for i = 1, lol do
+						hmm = hmm.."    "
+					end
+					str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ""
 				end
-				str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ""
-			end
-			end
-			if typeof(i) == "number" then 
-				n = true
-				str = str .. "".. self:getasstring(v, true) .. ","
 			else
-				local hmm = "    "
-				for i = 1, lol do
-					hmm = hmm.."    "
+				if typeof(i) == "number" then 
+					n = true
+					str = str .. "".. self:getasstring(v, true) .. ","
+				else
+					local hmm = "    "
+					for i = 1, lol do
+						hmm = hmm.."    "
+					end
+					str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ","
 				end
-				str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ","
-			end
+			end	
 		end
 		if n or string.sub(str, -1) == "}" then
 			return str .. "}"
