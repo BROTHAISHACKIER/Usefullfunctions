@@ -26,8 +26,11 @@ function funcs:getpath(instance)
 
 	return result
 end
-function funcs:getasstring(val)
-  local t = typeof(val)
+function funcs:getasstring(val, check, lol)
+  if not lol then
+		lol = 0
+	end
+	local t = typeof(val)
 	if t == "string" then
 		return'"' .. val..'"'
 	elseif t == "number" then
@@ -46,9 +49,13 @@ function funcs:getasstring(val)
 		for i, v in pairs(val) do
 			if typeof(i) == "number" then 
 				n = true
-				str = str .. "".. getasstring(v, true) .. ","
+				str = str .. "".. self:getasstring(v, true) .. ","
 			else
-				str = str .. "\n    "..'["'.. tostring(i).. '"] = ' .. getasstring(v, true) .. ","
+				local hmm = "    "
+				for i = 1, lol do
+					hmm = hmm.."    "
+				end
+				str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ","
 			end
 		end
 		if n then
@@ -64,7 +71,7 @@ function funcs:getasstring(val)
 	elseif t == "thread" then
 		return "[thread]"
 	elseif t == "Instance" then
-		return self:getpath(val)
+		return getpath(val)
 	elseif t == "userdata" then
 		return "[Unsuported userdata]"
 	elseif t == "CFrame" then
@@ -106,7 +113,36 @@ function funcs:getasstring(val)
 		return 'BrickColor.new("'.. tostring(val) .. '")'
 	elseif t == "Color3" then
 		return "Color3.fromRGB("..tostring(math.floor((val.R*255)+0.5))..", "..tostring(math.floor((val.G*255)+0.5))..", "..tostring(math.floor((val.B*255)+0.5))..")"
+	elseif t == "ColorSequenceKeypoint" then
+		return "ColorSequenceKeypoint.new("..val.Time..", ".. self:getasstring(val.Value) .. ")"
+	elseif t == "ColorSequence" then
+		local str = "ColorSequence.new({\n"
+		for i, v in ipairs(val.Keypoints) do
+			str = str .. "    ".. self:getasstring(v) .. ",\n"
+		end
+		return str .. "})"
+	elseif t == "UDim" then
+		if check then
+			return val.Scale..", ".. val.Offset
+		end
+		return "UDim.new("..val.Scale..", ".. val.Offset..")"
+	elseif t == "UDim2" then
+		return "UDim2.new("..self:getasstring(val.X, true)..", "..self:getasstring(val.Y, true)..")"
+	elseif t == "NumberRange" then
+		return "NumberRange.new("..val.Min..", "..val.Max..")"
+	elseif t == "NumberSequenceKeypoint" then
+		if val.Envelope <= 0 then
+			return "NumberSequenceKeypoint.new(" .. val.Time .. ", ".. val.Value ..")"
+		else
+			return "NumberSequenceKeypoint.new(" .. val.Time .. ", ".. val.Value ..", ".. val.Envelope .. ")"
+		end
+	elseif t == "NumberSequence" then
+		local str = "NumberSequence.new({\n"
+		for i, v in ipairs(val.Keypoints) do
+			str = str .. "    ".. self:getasstring(v) .. ",\n"
+		end
+		return str .. "})"
 	end
-	return "[Unsuported Value] "
+	return "[Unsuported Value ("..t..")]"
 end
 return funcs
