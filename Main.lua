@@ -74,7 +74,7 @@ function funcs:getasstring(val, check, lol)
 				str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ","
 			end
 		end
-		if n or string.sub(str, -1) == } then
+		if n or string.sub(str, -1) == "}" then
 			return str .. "}"
 		end
 		return str .. "\n}"
