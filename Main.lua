@@ -67,7 +67,7 @@ function funcs:getasstring(val, check, lol)
 			else
 				if typeof(i) == "number" then 
 					n = true
-					str = str .. "".. self:getasstring(v, true) .. ","
+					str = str .. "".. self:getasstring(v, true) .. ", "
 				else
 					local hmm = "    "
 					for i = 1, lol do
