@@ -11,6 +11,13 @@ function funcs:getpath(instance)
 	local path = {}
 
 	while instance and instance ~= game do
+		local parent = instance.Parent
+
+		if parent == game then
+			table.insert(path, 1, 'game:GetService("' .. instance.ClassName .. '")')
+			break
+		end
+
 		local name = instance.Name
 
 		if name:match("[%W]") then
@@ -19,10 +26,12 @@ function funcs:getpath(instance)
 			table.insert(path, 1, "." .. name)
 		end
 
-		instance = instance.Parent
+		instance = parent
 	end
 
-	table.insert(path, 1, "game")
+	if #path == 0 then
+		return "game"
+	end
 
 	return table.concat(path)
 end
