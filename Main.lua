@@ -1,15 +1,16 @@
 local funcs = {}
 function funcs:getpath(instance)
-	if instance == game then
-		return "game"
-	end
 	if not instance then
 		return "nil"
 	end
 
+	if instance == game then
+		return "game"
+	end
+
 	local path = {}
 
-	while instance and (instance ~= game or instance.Parent ~= game) do
+	while instance and instance ~= game do
 		local name = instance.Name
 
 		if name:match("[%W]") then
@@ -20,14 +21,10 @@ function funcs:getpath(instance)
 
 		instance = instance.Parent
 	end
-	tabel.insert(path, 1, ':GetService("' .. instance.ClassName .. '")')
+
 	table.insert(path, 1, "game")
 
-	local result = table.concat(path)
-
-	result = result:gsub("game%.", "game.", 1)
-
-	return result
+	return table.concat(path)
 end
 function funcs:getasstring(val, check, lol)
   if not lol then
