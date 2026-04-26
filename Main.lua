@@ -67,9 +67,9 @@ function funcs:getasstring(val, check, lol)
 					n = true
 					str = str .. "".. self:getasstring(v, true) .. ""
 				else
-					local hmm = "    "
+					local hmm = "	"
 					for i = 1, lol do
-						hmm = hmm.."    "
+						hmm = hmm.."	"
 					end
 					str = str .. "\n"..hmm..'["'.. tostring(i).. '"] = ' .. self:getasstring(v, true, lol+1) .. ""
 				end
