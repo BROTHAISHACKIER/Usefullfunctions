@@ -173,7 +173,7 @@ function funcs:getasstring(val, check, lol)
 	end
 	return "[Unsuported Value ("..t..")]"
 end
-local function funcs:logger(thing, ...)
+function funcs:logger(thing, ...)
 	local content = thing .. "("
 	for k, v in pairs({...}) do
 		if k == #{...} then
