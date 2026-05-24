@@ -411,5 +411,90 @@ function funcs:funcedit(fn, env)
 	end
 	return a,b
 end
+funcs.loggerenv = {
+	print = function(...)
+		funcs:logger("print", ...)
+		return print(...)
+	end,
+
+	warn = function(...)
+		funcs:logger("warn", ...)
+		return warn(...)
+	end,
+
+	error = function(...)
+		funcs:logger("error", ...)
+		return error(...)
+	end,
+	Instance = {
+		new = function(...)
+			local args = table.pack(...)
+			task.spawn(function()
+				funcs:logger("Instance.new", table.unpack(args, 1, args.n))
+			end)
+			return Instance.new(...)
+		end,
+	},
+	loadstring = function(...)
+		local args = table.pack(...)
+
+		task.spawn(function()
+			log("loadstring", table.unpack(args, 1, args.n))
+		end)
+		return loadstring(...)
+	end,
+	assert = function(...)
+		log("assert", ...)
+		return assert(...)
+	end,
+	game = {
+		HttpGet = function(_, ...)
+			local args = table.pack(...)
+	
+			task.spawn(function()
+				log("game:HttpGet", table.unpack(args, 1, args.n))
+			end)
+			return game:HttpGet(...)
+		end,
+	},
+	delfile = function(...)
+		log("delfile", ...)
+		return delfile(...)
+	end,
+	makefolder = function(...)
+		log("makefolder", ...)
+		return makefolder(...)
+	end,
+	readfile = function(...)
+		log("readfile", ...)
+		return readfile(...)
+	end,
+	writefile = function(...)
+		log("writefile", ...)
+		return writefile(...)
+	end,
+	listfiles = function(...)
+		log("listfiles", ...)
+		return listfiles(...)
+	end,
+	pcall = function(...)
+		local args = table.pack(...)
+
+		task.spawn(function()
+			log("pcall", table.unpack(args, 1, args.n))
+		end)
+
+		local results = table.pack(pcall(table.unpack(args, 1, args.n)))
+
+		if not results[1] then
+			task.spawn(function()
+				log("pcall error", results[2])
+			end)
+			warn("pcall error", results[2])
+		end
+
+		return table.unpack(results, 1, results.n)
+	end,
+}
 
 return funcs
