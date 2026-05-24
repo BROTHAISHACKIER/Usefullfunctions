@@ -173,4 +173,242 @@ function funcs:getasstring(val, check, lol)
 	end
 	return "[Unsuported Value ("..t..")]"
 end
+local function funcs:logger(thing, ...)
+	local content = thing .. "("
+	for k, v in pairs({...}) do
+		if k == #{...} then
+			content = content .. self:getasstring(v)
+		else
+			content = content .. self:getasstring(v) .. ", "
+		end
+	end
+	content = content .. ")"
+	if ... == nil then
+		content = thing
+	end
+	if thing == "pcall error" then
+		content = thing .. " " .. ...
+	end
+	if thing == "Script error" then
+		content = thing .. " " .. ...
+	end
+	if self.LOGGGGGG and table.find(listfiles("./"), "./"..self.LOGGGGGG) then
+		writefile(self.LOGGGGGG, readfile(self.LOGGGGGG).."\n\n"..content.."   | time: "..os.date("!%H:%M:%S"))
+	else
+		if table.find(listfiles("./"), "./.ULogger") or table.find(listfiles("./"), ".ULogger") then
+			local log = "Log_"..string.sub(script:GetDebugId()..".log", 3, -1)
+			self.LOGGGGGG = ".ULogger/"..log
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "log is avaiable at",
+				Text = "workspace/"..string.sub(self.LOGGGGGG, 2, -1),
+				Duration = 5,
+			})
+			writefile(self.LOGGGGGG, content .. "   | time: " .. os.date("!%H:%M:%S"))
+		else
+			makefolder(".ULogger")
+			local log = "Log_"..string.sub(script:GetDebugId()..".log", 3, -1)
+			self.LOGGGGGG = ".ULogger/"..log
+			game:GetService("StarterGui"):SetCore("SendNotification", {
+				Title = "log is avaiable at",
+				Text = "workspace/"..string.sub(self.LOGGGGGG, 2, -1),
+				Duration = 5,
+			})
+			writefile(self.LOGGGGGG, content .. "   | time: " .. os.date("!%H:%M:%S"))
+		end
+	end
+end
+function funcs:funcedit(fn, env)
+	local global = {
+		--globals
+		assert = assert,
+		collectgarbage = collectgarbage,
+		DebuggerManager = DebuggerManager,
+		delay = delay,
+		elapsedTime = elapsedTime,
+		Enum = Enum,
+		game = {
+			CreatorId = game.CreatorId,
+			CreatorType = game.CreatorType,
+			PlaceId = game.PlaceId,
+			PlaceVersion = game.PlaceVersion,
+
+			Lighting = game.Lighting,
+			Workspace = game.Workspace,
+			workspace = game.workspace,
+
+			RunService = game:GetService("RunService"),
+
+			GetService = function(_, ...)
+				return game:GetService(...)
+			end,
+			HttpGet = function(_, ...)
+				return game:HttpGet(...)
+			end,
+			TweenService = game:GetService("TweenService"),
+			UserInputService = game:GetService("UserInputService"),
+			CoreGui = game:GetService("CoreGui"),
+			Players = game:GetService("Players"),
+			GuiService = game:GetService("GuiService"),
+		},
+		error = error,
+		gcinfo = gcinfo,
+		getfenv = getfenv,
+		getmetatable = getmetatable,
+		ipairs = ipairs,
+		loadstring = loadstring,
+		newproxy = newproxy,
+		next = next,
+		pairs = pairs,
+		pcall = pcall,
+		plugin = plugin,
+		PluginManager = PluginManager,
+		print = print,
+		printidentity = printidentity,
+		rawequal = rawequal,
+		rawget = rawget,
+		rawlen = rawlen,
+		rawset = rawset,
+		require = require,
+		script = script,
+		select = select,
+		setfenv = setfenv,
+		setmetatable = setmetatable,
+		settings = settings,
+		shared = shared,
+		spawn = spawn,
+		stats = stats,
+		tick = tick,
+		time = time,
+		tonumber = tonumber,
+		tostring = tostring,
+		type = type,
+		typeof = typeof,
+		unpack = unpack,
+		UserSettings = UserSettings,
+		version = version,
+		wait = wait,
+		warn = warn,
+		workspace = workspace,
+		xpcall = xpcall,
+		ypcall = ypcall,
+		_G = _G,
+		_VERSION = _VERSION,
+		--libraries
+		bit32 = bit32,
+		buffer = buffer,
+		coroutine = coroutine,
+		debug = debug,
+		math = math,
+		os = {
+			clock = os.clock,
+			date = os.date,
+			difftime = os.difftime,
+			time = os.time,
+		},
+		string = string,
+		table = table,
+		task = {
+			spawn = task.spawn,
+			defer = task.defer,
+			delay = task.delay,
+			desynchronize = task.desynchronize,
+			synchronize = task.synchronize,
+			wait = task.wait,
+			cancel = task.cancel,
+		},
+		utf8 = utf8,
+		vector = vector,
+		--Data types
+		Axes = Axes,
+		BrickColor = BrickColor,
+		CatalogSearchParams = CatalogSearchParams,
+		CFrame = CFrame,
+		Color3 = Color3,
+		ColorSequence = ColorSequence,
+		ColorSequenceKeypoint = ColorSequenceKeypoint,
+		Content = Content,
+		DateTime = DateTime,
+		DockWidgetPluginGuiInfo = {
+			InitialEnabled = DockWidgetPluginGuiInfo.InitialEnabled,
+			InitialEnabledShouldOverrideRestore = DockWidgetPluginGuiInfo.InitialEnabledShouldOverrideRestore,
+			FloatingXSize = DockWidgetPluginGuiInfo.FloatingXSize,
+			FloatingYSize = DockWidgetPluginGuiInfo.FloatingYSize,
+			MinWidth = DockWidgetPluginGuiInfo.MinWidth,
+			MinHeight = DockWidgetPluginGuiInfo.MinHeight,
+		},
+		EnumItem = EnumItem,
+		Enums = Enums,
+		Faces = Faces,
+		FloatCurveKey = FloatCurveKey,
+		Font = Font,
+		Instance = {
+			new = Instance.new,
+			fromExisting = Instance.fromExisting,
+		},
+		NumberRange = NumberRange,
+		NumberSequence = {
+			new = NumberSequence.new,
+		},
+		NumberSequenceKeypoint = NumberSequenceKeypoint,
+		OverlapParams = OverlapParams,
+		Path2DControlPoint = Path2DControlPoint,
+		PathWaypoint = PathWaypoint,
+		PhysicalProperties = PhysicalProperties,
+		Random = Random,
+		Ray = Ray,
+		RaycastParams = RaycastParams,
+		RaycastResult = RaycastResult,
+		RBXScriptConnection = RBXScriptConnection,
+		RBXScriptSignal = RBXScriptSignal,
+		Rect = Rect,
+		Region3 = Region3,
+		Region3int16 = Region3int16,
+		RotationCurveKey = RotationCurveKey,
+		Secret = Secret,
+		SecurityCapabilities = SecurityCapabilities,
+		SharedTable = SharedTable,
+		TweenInfo = TweenInfo,
+		UDim = UDim,
+		UDim2 = UDim2,
+		ValueCurveKey = ValueCurveKey,
+		Vector2 = Vector2,
+		Vector2int16 = Vector2int16,
+		Vector3 = Vector3,
+		Vector3int16 = Vector3int16,
+		--exec
+		readfile = readfile,
+		writefile = writefile,
+		delfile = delfile,
+		makefolder = makefolder,
+		listfiles = listfiles,
+		getgenv = getgenv,
+		getfenv = getfenv,
+		getrenv = getrenv,
+		setclipboard = setclipboard,
+	}
+	for i, v in pairs(env) do
+		if typeof(v) == "table" then
+			for i2, v2 in pairs(v) do
+				if not pcall(function()
+					global[i][i2] = v2
+				end) then
+					global[i] = v
+					warn("Attempt to change a protected metatable, Trying to set the whole metatable into the set env.")
+				end
+			end
+		else
+			global[i] = v
+		end
+	end
+
+	setfenv(fn, setmetatable(global, {
+		__index = _G
+	}))
+	local a,b = pcall(fn)
+	if not a then
+		error(b, 0)
+	end
+	return a,b
+end
+
 return funcs
