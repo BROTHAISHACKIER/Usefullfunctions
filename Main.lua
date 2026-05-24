@@ -189,7 +189,7 @@ local function funcs:logger(thing, ...)
 	if thing == "pcall error" then
 		content = thing .. " " .. ...
 	end
-	if thing == "Script error" then
+	if thing == "ERROR" then
 		content = thing .. " " .. ...
 	end
 	if self.LOGGGGGG and table.find(listfiles("./"), "./"..self.LOGGGGGG) then
@@ -407,6 +407,7 @@ function funcs:funcedit(fn, env)
 	local a,b = pcall(fn)
 	if not a then
 		error(b, 0)
+		self:logger("ERROR", b)
 	end
 	return a,b
 end
