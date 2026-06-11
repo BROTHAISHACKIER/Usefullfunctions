@@ -296,7 +296,16 @@ function funcs:funcedit(fn, env)
 		--libraries
 		bit32 = bit32,
 		buffer = buffer,
-		coroutine = coroutine,
+		coroutine = {
+			close = coroutine.close,
+			create = coroutine.create,
+			isyieldable = coroutine.isyeildable,
+			resume = coroutine.resume,
+			running = coroutine.running,
+			status = coroutine.status,
+			wrap = coroutine.wrap,
+			yield = coroutine.yeild,
+		},
 		debug = debug,
 		math = math,
 		os = {
