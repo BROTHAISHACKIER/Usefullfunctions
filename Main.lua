@@ -271,6 +271,7 @@ function funcs:funcedit(fn, env)
 		require = require,
 		script = script,
 		select = select,
+		GetDebugId = GetDebugId,
 		setfenv = setfenv,
 		setmetatable = setmetatable,
 		settings = settings,
