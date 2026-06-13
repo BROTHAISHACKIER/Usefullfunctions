@@ -383,6 +383,47 @@ function funcs:funcedit(fn, env)
 	    isexecutorclosure = isexecutorclosure,
 	    clonefunction = clonefunction,
 	    Drawing = Drawing,
+		gethui = gethui,
+	    getscriptbytecode = getscriptbytecode,
+	    identifyexecutor = identifyexecutor,
+	    queue_on_teleport = queue_on_teleport,
+	    iswindowactive = iswindowactive,
+	    messagebox = messagebox,
+	
+	    -- Cryptography
+	    crypt = {
+	        encrypt = crypt.encrypt,
+	        decrypt = crypt.decrypt,
+	        hash = crypt.hash,
+	        random = crypt.random,
+	        base64encode = crypt.base64encode,
+	        base64decode = crypt.base64decode,
+	    },
+	
+	    -- HTTP & Network
+	    request = request,
+	    http_request = http_request,
+	    websocket = websocket,
+	
+	    -- Console
+	    rconsoleprint = rconsoleprint,
+	    rconsoleclear = rconsoleclear,
+	    rconsolename = rconsolename,
+	    rconsoleinput = rconsoleinput,
+	
+	    -- Advanced Metatable/Closure
+	    newcclosure = newcclosure,
+	    getrawmetatable = getrawmetatable,
+	    setrawmetatable = setrawmetatable,
+	    getupvalues = getupvalues,
+	    setupvalues = setupvalues,
+	    getconstants = getconstants,
+	    setconstants = setconstants,
+	
+	    -- Interaction Fires
+	    fireclickdetector = fireclickdetector,
+	    firetouchinterest = firetouchinterest,
+	    fireproximityprompt = fireproximityprompt,
 	}
 	for i, v in pairs(env) do
 		if typeof(v) == "table" then
