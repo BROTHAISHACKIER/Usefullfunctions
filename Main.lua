@@ -196,7 +196,7 @@ function funcs:logger(thing, ...)
 		writefile(self.LOGGGGGG, readfile(self.LOGGGGGG).."\n\n"..content.."   | time: "..os.date("!%H:%M:%S"))
 	else
 		if table.find(listfiles("./"), "./.ULogger") or table.find(listfiles("./"), ".ULogger") then
-			local log = "Log_"..string.sub(script:GetDebugId()..".log", 3, -1)
+			local log = "Log_"..string.sub(math.random(1,9999999999999)..".log", 3, -1)
 			self.LOGGGGGG = ".ULogger/"..log
 			game:GetService("StarterGui"):SetCore("SendNotification", {
 				Title = "log is avaiable at",
