@@ -241,12 +241,28 @@ function module:CreateEditor(parent)
     numscroll.AutomaticCanvasSize = Enum.AutomaticSize.XY
     numscroll.BackgroundColor3 = Color3.fromRGB(32, 34, 39)
 
-    scrollingFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
-        numscroll.CanvasPosition = Vector2.new(numscroll.CanvasPosition.X,scrollingFrame.CanvasPosition.Y)
-    end)
+    local syncing = false
 
+    scrollingFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
+        if syncing then return end
+    
+        syncing = true
+        numscroll.CanvasPosition = Vector2.new(
+            numscroll.CanvasPosition.X,
+            scrollingFrame.CanvasPosition.Y
+        )
+        syncing = false
+    end)
+    
     numscroll:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
-        scrollingFrame.CanvasPosition = Vector2.new(scrollingFrame.CanvasPosition.X,numscroll.CanvasPosition.Y)
+        if syncing then return end
+    
+        syncing = true
+        scrollingFrame.CanvasPosition = Vector2.new(
+            scrollingFrame.CanvasPosition.X,
+            numscroll.CanvasPosition.Y
+        )
+        syncing = false
     end)
 
 
