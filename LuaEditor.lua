@@ -481,7 +481,7 @@ function module:CreateEditor(setting)
 
     richText.TextSize = 16
 
-    richText.Text = "--script here"
+    richText.Text = setting.start or "--script here"
 
     richText.RichText = true
 
@@ -541,7 +541,7 @@ function module:CreateEditor(setting)
 
     rawText.TextSize = 16
 
-    rawText.Text = "--script here"
+    rawText.Text = setting.start or "--script here"
 
     rawText.RichText = false
 
