@@ -374,6 +374,7 @@ function module:CreateEditor(parent)
 
     scrollingFrame.BackgroundColor3 =
         Color3.fromRGB(32, 34, 39)
+    scrollingFrame.BorderSizePixel = 0
 
     local numscroll = Instance.new(
         "ScrollingFrame",
@@ -403,6 +404,7 @@ function module:CreateEditor(parent)
 
     numscroll.BackgroundColor3 =
         Color3.fromRGB(32, 34, 39)
+    numscroll.BorderSizePixel = 0
 
     local syncing = false
 
@@ -539,8 +541,6 @@ function module:CreateEditor(parent)
     rawText.Font = Enum.Font.Code
 
     rawText.MultiLine = true
-
-    rawText.TextWrapped = false
 
     rawText:GetPropertyChangedSignal(
         "Text"
@@ -1084,9 +1084,26 @@ function module:CreateEditor(parent)
         end
     end
 
-    rawText:GetPropertyChangedSignal(
-        "Text"
-    ):Connect(function()
+    local normalizingText = false
+
+    rawText:GetPropertyChangedSignal("Text"):Connect(function()
+        if normalizingText then
+            return
+        end
+
+        local text = rawText.Text
+
+        -- Normalize Windows CRLF and old Mac CR line endings
+        local normalized = text
+            :gsub("\r\n", "\n")
+            :gsub("\r", "\n")
+
+        if normalized ~= text then
+            normalizingText = true
+            rawText.Text = normalized
+            normalizingText = false
+        end
+
         updateRich()
         resetCursorBlink()
     end)
