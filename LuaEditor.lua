@@ -1231,7 +1231,9 @@ function module:CreateEditor(setting)
         numscroll:Destroy()
         scrollingFrame:Destroy()
     end
-    setting.parent.Destroying:Connect(mod:Destroy())
+    setting.parent.Destroying:Connect(function()
+        mod:Destroy()
+    end)
     updateRich()
 
     return mod
