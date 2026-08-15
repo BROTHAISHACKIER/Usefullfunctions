@@ -1,11 +1,15 @@
 local module = {}
 
-function module:CreateEditor(parent)
+function module:CreateEditor(setting)
+    if not(setting.parent and typeof(setting.parent) == "Instance") then
+        error("setting parent does not exist or is not an instance", 2)
+        return nil, "setting parent does not exist or is not an instance"
+    end
     local mod = {}
     local TextService = game:GetService("TextService")
     local envtbl = getfenv and getfenv(0) or _G
 
-    local colors = {
+    mod.colors = {
         ["string"] = Color3.fromRGB(142, 233, 182),
         ["comment"] = Color3.fromRGB(106, 111, 129),
         ["keyword"] = Color3.fromRGB(235, 121, 115),
@@ -15,15 +19,25 @@ function module:CreateEditor(parent)
         ["number"] = Color3.fromRGB(242, 186, 42),
         ["boolean"] = Color3.fromRGB(242, 186, 42),
         ["operator"] = Color3.fromRGB(188, 190, 200),
-        ["selection"] = Color3.fromRGB(255, 255, 255)
+        ["selection"] = Color3.fromRGB(255, 255, 255),
+        ["background"] = Color3.fromRGB(32, 34, 39),
+        ["line numbers"] = Color3.fromRGB(188, 190, 200),
+        ["default"] = Color3.fromRGB(188, 190, 200),
+        ["selection background"] = Color3.fromRGB(19, 35, 93),
     }
+    if setting.colors and typeof(setting.colors) == "table" then
+        for i,v in setting.colors do
+            mod.colors[i] = v
+        end
+    end
 
     local keywords = {
         ["local"] = true, ["function"] = true, ["end"] = true, ["return"] = true,
         ["if"] = true, ["elseif"] = true, ["else"] = true, ["while"] = true,
         ["for"] = true, ["do"] = true, ["in"] = true, ["break"] = true,
         ["continue"] = true, ["and"] = true, ["or"] = true, ["not"] = true,
-        ["nil"] = true, ["true"] = true, ["false"] = true
+        ["nil"] = true, ["true"] = true, ["false"] = true, ["then"] = true,
+        ["repeat"] = true, ["until"] = true,
     }
 
     local builtins = envtbl
@@ -38,16 +52,17 @@ function module:CreateEditor(parent)
     end
 
     local colorHexes = {
-        ["string"] = colorToHex(colors["string"]),
-        ["comment"] = colorToHex(colors["comment"]),
-        ["keyword"] = colorToHex(colors["keyword"]),
-        ["local method"] = colorToHex(colors["local method"]),
-        ["built-in function"] = colorToHex(colors["built-in function"]),
-        ["local property"] = colorToHex(colors["local property"]),
-        ["number"] = colorToHex(colors["number"]),
-        ["boolean"] = colorToHex(colors["boolean"]),
-        ["operator"] = colorToHex(colors["operator"]),
-        ["selection"] = colorToHex(colors["selection"])
+        ["string"] = colorToHex(mod.colors["string"]),
+        ["comment"] = colorToHex(mod.colors["comment"]),
+        ["keyword"] = colorToHex(mod.colors["keyword"]),
+        ["local method"] = colorToHex(mod.colors["local method"]),
+        ["built-in function"] = colorToHex(mod.colors["built-in function"]),
+        ["local property"] = colorToHex(mod.colors["local property"]),
+        ["number"] = colorToHex(mod.colors["number"]),
+        ["boolean"] = colorToHex(mod.colors["boolean"]),
+        ["operator"] = colorToHex(mod.colors["operator"]),
+        ["selection"] = colorToHex(mod.colors["selection"]),
+        ["default"] = colorToHex(mod.colors["default"])
     }
 
     local function escapeRichText(text)
@@ -58,7 +73,7 @@ function module:CreateEditor(parent)
     end
 
     local function colorize(text, colorType, bold)
-        local hex = colorHexes[colorType]
+        local hex = colorHexes[colorType] or colorHexes["default"]
         local escaped = escapeRichText(text)
 
         if bold then
@@ -310,7 +325,7 @@ function module:CreateEditor(parent)
                     processToken(
                         word,
                         start,
-                        "operator",
+                        "default",
                         false
                     )
                 end
@@ -332,12 +347,21 @@ function module:CreateEditor(parent)
                 )
 
             else
-                processToken(
-                    char,
-                    i,
-                    "operator",
-                    false
-                )
+                if char:match("%s") then
+                    processToken(
+                        char,
+                        i,
+                        "default",
+                        false
+                    )
+                else
+                    processToken(
+                        char,
+                        i,
+                        "operator",
+                        false
+                    )
+                end
 
                 i += 1
             end
@@ -348,7 +372,7 @@ function module:CreateEditor(parent)
 
     local scrollingFrame = Instance.new(
         "ScrollingFrame",
-        parent
+        setting.parent
     )
 
     scrollingFrame.CanvasSize =
@@ -373,12 +397,12 @@ function module:CreateEditor(parent)
     scrollingFrame.ScrollBarImageTransparency = 0.5
 
     scrollingFrame.BackgroundColor3 =
-        Color3.fromRGB(32, 34, 39)
+        mod.colors["background"]
     scrollingFrame.BorderSizePixel = 0
 
     local numscroll = Instance.new(
         "ScrollingFrame",
-        parent
+        setting.parent
     )
 
     numscroll.Size =
@@ -403,7 +427,7 @@ function module:CreateEditor(parent)
     numscroll.ScrollBarImageTransparency = 0.5
 
     numscroll.BackgroundColor3 =
-        Color3.fromRGB(32, 34, 39)
+        mod.colors["background"]
     numscroll.BorderSizePixel = 0
 
     local syncing = false
@@ -442,13 +466,6 @@ function module:CreateEditor(parent)
         syncing = false
     end)
 
-    local aspectRatio = Instance.new(
-        "UIAspectRatioConstraint",
-        OFrame
-    )
-
-    aspectRatio.AspectRatio = 4 / 3
-
     local richText = Instance.new(
         "TextLabel",
         scrollingFrame
@@ -460,7 +477,7 @@ function module:CreateEditor(parent)
     richText.BackgroundTransparency = 1
 
     richText.TextColor3 =
-        Color3.fromRGB(188, 190, 200)
+        mod.colors["default"]
 
     richText.TextSize = 16
 
@@ -489,7 +506,7 @@ function module:CreateEditor(parent)
     nt.BackgroundTransparency = 1
 
     nt.TextColor3 =
-        Color3.fromRGB(188, 190, 200)
+        mod.colors["line numbers"]
 
     nt.TextSize = 16
 
@@ -615,8 +632,8 @@ function module:CreateEditor(parent)
 
         frame.Name = "Selection"
 
-        frame.BackgroundColor3 =
-            Color3.fromRGB(19, 35, 93)
+        frame.BackgroundColor3 = mod.colors["selection background"]
+            
 
         frame.BackgroundTransparency = 0.35
 
@@ -790,12 +807,6 @@ function module:CreateEditor(parent)
 
         return y
     end
-
-    ----------------------------------------------------------------
-    -- FIX:
-    -- Manually calculate the actual canvas dimensions instead of
-    -- using AutomaticCanvasSize.
-    ----------------------------------------------------------------
 
     local function updateCanvasSize()
         local raw = rawText.Text
@@ -1073,7 +1084,6 @@ function module:CreateEditor(parent)
                 actualEnd
             )
 
-        -- FIX: update the real canvas after the text changes.
         updateCanvasSize()
 
         updateSelection()
@@ -1093,7 +1103,6 @@ function module:CreateEditor(parent)
 
         local text = rawText.Text
 
-        -- Normalize Windows CRLF and old Mac CR line endings
         local normalized = text
             :gsub("\r\n", "\n")
             :gsub("\r", "\n")
@@ -1186,6 +1195,30 @@ function module:CreateEditor(parent)
         clearSelection()
     end)
 
+    function mod:UpdateColors(colors)
+        for i,v in colors do
+            mod.colors[i] = v
+        end
+        colorHexes = {
+            ["string"] = colorToHex(mod.colors["string"]),
+            ["comment"] = colorToHex(mod.colors["comment"]),
+            ["keyword"] = colorToHex(mod.colors["keyword"]),
+            ["local method"] = colorToHex(mod.colors["local method"]),
+            ["built-in function"] = colorToHex(mod.colors["built-in function"]),
+            ["local property"] = colorToHex(mod.colors["local property"]),
+            ["number"] = colorToHex(mod.colors["number"]),
+            ["boolean"] = colorToHex(mod.colors["boolean"]),
+            ["operator"] = colorToHex(mod.colors["operator"]),
+            ["selection"] = colorToHex(mod.colors["selection"]),
+            ["default"] = colorToHex(mod.colors["default"]),
+        }
+        numscroll.BackgroundColor3 = mod.colors["background"]
+        scrollingFrame.BackgroundColor3 = mod.colors["background"]
+        nt.TextColor3 = mod.colors["line numbers"]
+        richText.TextColor3 = mod.colors["default"]
+        updateRich()
+    end
+
     function mod:SetRaw(raw)
         rawText.Text = raw
     end
@@ -1194,16 +1227,9 @@ function module:CreateEditor(parent)
         return rawText.ContentText
     end
 
-    local abraham = false
-
     function mod:Destroy()
         numscroll:Destroy()
         scrollingFrame:Destroy()
-        abraham = true
-    end
-
-    while abraham do
-        return
     end
 
     updateRich()
