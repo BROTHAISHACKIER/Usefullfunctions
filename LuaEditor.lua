@@ -1,5 +1,36 @@
 local module = {}
-
+module.themes.defualt = {
+    ["string"] = Color3.fromRGB(142, 233, 182),
+    ["comment"] = Color3.fromRGB(106, 111, 129),
+    ["keyword"] = Color3.fromRGB(235, 121, 115),
+    ["local method"] = Color3.fromRGB(250, 228, 170),
+    ["built-in function"] = Color3.fromRGB(143, 180, 255),
+    ["local property"] = Color3.fromRGB(112, 160, 255),
+    ["number"] = Color3.fromRGB(242, 186, 42),
+    ["boolean"] = Color3.fromRGB(242, 186, 42),
+    ["operator"] = Color3.fromRGB(188, 190, 200),
+    ["selection"] = Color3.fromRGB(255, 255, 255),
+    ["background"] = Color3.fromRGB(32, 34, 39),
+    ["line numbers"] = Color3.fromRGB(188, 190, 200),
+    ["default"] = Color3.fromRGB(188, 190, 200),
+    ["selection background"] = Color3.fromRGB(19, 35, 93),
+}
+module.themes.RobloxStudioDark = {
+    ["string"] = Color3.fromRGB(142, 233, 182),
+    ["comment"] = Color3.fromRGB(106, 111, 129),
+    ["keyword"] = Color3.fromRGB(235, 121, 115),
+    ["local method"] = Color3.fromRGB(250, 228, 170),
+    ["built-in function"] = Color3.fromRGB(143, 180, 255),
+    ["local property"] = Color3.fromRGB(112, 160, 255),
+    ["number"] = Color3.fromRGB(242, 186, 42),
+    ["boolean"] = Color3.fromRGB(242, 186, 42),
+    ["operator"] = Color3.fromRGB(188, 190, 200),
+    ["selection"] = Color3.fromRGB(255, 255, 255),
+    ["background"] = Color3.fromRGB(32, 34, 39),
+    ["line numbers"] = Color3.fromRGB(188, 190, 200),
+    ["default"] = Color3.fromRGB(188, 190, 200),
+    ["selection background"] = Color3.fromRGB(19, 35, 93),
+}
 function module:CreateEditor(setting)
     if not(setting.parent and typeof(setting.parent) == "Instance") then
         error("setting parent does not exist or is not an instance", 2)
@@ -9,22 +40,7 @@ function module:CreateEditor(setting)
     local TextService = game:GetService("TextService")
     local envtbl = getfenv and getfenv(0) or _G
 
-    mod.colors = {
-        ["string"] = Color3.fromRGB(142, 233, 182),
-        ["comment"] = Color3.fromRGB(106, 111, 129),
-        ["keyword"] = Color3.fromRGB(235, 121, 115),
-        ["local method"] = Color3.fromRGB(250, 228, 170),
-        ["built-in function"] = Color3.fromRGB(143, 180, 255),
-        ["local property"] = Color3.fromRGB(112, 160, 255),
-        ["number"] = Color3.fromRGB(242, 186, 42),
-        ["boolean"] = Color3.fromRGB(242, 186, 42),
-        ["operator"] = Color3.fromRGB(188, 190, 200),
-        ["selection"] = Color3.fromRGB(255, 255, 255),
-        ["background"] = Color3.fromRGB(32, 34, 39),
-        ["line numbers"] = Color3.fromRGB(188, 190, 200),
-        ["default"] = Color3.fromRGB(188, 190, 200),
-        ["selection background"] = Color3.fromRGB(19, 35, 93),
-    }
+    mod.colors = module.themes.defualt
     if setting.colors and typeof(setting.colors) == "table" then
         for i,v in setting.colors do
             mod.colors[i] = v
