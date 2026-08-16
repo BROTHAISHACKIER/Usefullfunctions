@@ -1,4 +1,5 @@
 local module = {}
+module.themes = {}
 module.themes.defualt = {
     ["string"] = Color3.fromRGB(142, 233, 182),
     ["comment"] = Color3.fromRGB(106, 111, 129),
@@ -40,7 +41,7 @@ function module:CreateEditor(setting)
     local TextService = game:GetService("TextService")
     local envtbl = getfenv and getfenv(0) or _G
 
-    mod.colors = module.themes.defualt
+    mod.colors = self.themes.defualt
     if setting.colors and typeof(setting.colors) == "table" then
         for i,v in setting.colors do
             mod.colors[i] = v
